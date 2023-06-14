@@ -9,6 +9,20 @@ public class ArgsTest {
     // -l -p 8080 -d /usr/logs
     // [-l],[-p,8080],[-d,/usr/logs]
     // {-l:{},-p:[8080],-d:[/usr/logs]}
+    // Single Option:
+    //      - Bool -l
+    //      - Integer -p 8080
+    //      - String -d /usr/logs
+    // multi options: -l -p 8080 -d /usr/logs
+    // sad path:
+    //  - bool -l t \ -l t f
+    //  - int -p \ -p 8080 8081
+    //  - string -d \ -d /usr/logs /usr/vars
+    // default value:
+    //  - bool : false
+    //  - int : 0
+    //  - string : ""
+
     @Test
     public void should_example_1() {
 //        Arguments args = Args.parse("l:b,p:d,d:s", "-l", "-p", "8080", "-d", "/usr/logs");
