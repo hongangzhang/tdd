@@ -11,7 +11,7 @@ public class ArgsTest {
     // [-l],[-p,8080],[-d,/usr/logs]
     // {-l:{},-p:[8080],-d:[/usr/logs]}
     // Single Option:
-    // TODO:     - Bool -l
+
     @Test
     public void should_set_boolean_option_to_true_if_flag_present() {
         BooleanOption option = Args.parse(BooleanOption.class, "-l");
@@ -29,9 +29,37 @@ public class ArgsTest {
     static record BooleanOption(@Option("l") boolean logging) {
     }
 
-    // TODO:     - Integer -p 8080
-    // TODO:     - String -d /usr/logs
+    @Test
+    public void should_parse_int_as_option_value() {
+        IntOption option = Args.parse(IntOption.class, "-p", "8080");
+
+        assertEquals(option.port(), 8080);
+    }
+
+    static record IntOption(@Option("p") int port) {}
+
+
+    @Test
+    public void should_parse_string_as_option_value() {
+        StringOption option = Args.parse(StringOption.class, "-d", "/usr/logs");
+
+        assertEquals("/usr/logs", option.directory());
+    }
+
+    static record StringOption(@Option("d")String directory) {}
+
     // TODO:multi options: -l -p 8080 -d /usr/logs
+    @Test
+    public void should_parse_multi_option() {
+        MultiOptions multiOptions = Args.parse(MultiOptions.class, "-l", "-p", "8080", "-d", "/usr/logs");
+        assertTrue(multiOptions.logging());
+        assertEquals(8080, multiOptions.port());
+        assertEquals("/usr/logs", multiOptions.directory());
+    }
+
+    static record MultiOptions(@Option("l") boolean logging, @Option("p") int port, @Option("d") String directory) {
+    }
+
     // sad path:
     // TODO: - bool -l t \ -l t f
     // TODO: - int -p \ -p 8080 8081
@@ -41,20 +69,10 @@ public class ArgsTest {
     // TODO: - int : 0
     // TODO: - string : ""
 
-    @Test
-    @Disabled
-    public void should_example_1() {
-//        Arguments args = Args.parse("l:b,p:d,d:s", "-l", "-p", "8080", "-d", "/usr/logs");
-//        args.getBool("l");
-//        arg.getInt("d");
 
-        Options options = Args.parse(Options.class, "-l", "-p", "8080", "-d", "/usr/logs");
-        assertTrue(options.logging());
-        assertEquals(8080, options.port());
-        assertEquals("/usr/logs", options.directory());
-    }
 
     // -g this is a list -d 1 2 -3 5
+
     @Test
     @Disabled
     public void should_example_2() {
@@ -63,9 +81,6 @@ public class ArgsTest {
         assertArrayEquals(new int[]{1, 2, -3, 5}, listOptions.decimals());
     }
 
-
-    static record Options(@Option("l") boolean logging, @Option("p") int port, @Option("d") String directory) {
-    }
 
     static record ListOptions(@Option("g") String[] group, @Option("d") int[] decimals) {
     }
