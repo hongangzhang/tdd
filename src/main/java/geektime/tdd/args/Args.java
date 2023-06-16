@@ -28,33 +28,21 @@ public class Args {
         Option option = parameter.getAnnotation(Option.class);
 
         if (parameter.getType().equals(boolean.class)) {
-            value = parseBoolean(arguments, option);
+            value = new BooleanOptionParser().parse(arguments, option);
         }
 
         if (parameter.getType().equals(int.class)) {
-            value = parseInt(arguments, option);
+            value = new IntOptionParser().parse(arguments, option);
         }
 
         if (parameter.getType().equals(String.class)) {
-            value = parseString(arguments, option);
+            value = new StringOptionParser().parse(arguments, option);
         }
         return value;
     }
 
     interface OptionParser {
         Object parse(List<String> arguments, Option option);
-    }
-
-    private static Object parseString(List<String> arguments, Option option) {
-        return new StringOptionParser().parse(arguments, option);
-    }
-
-    private static Object parseInt(List<String> arguments, Option option) {
-        return new IntOptionParser().parse(arguments, option);
-    }
-
-    private static Object parseBoolean(List<String> arguments, Option option) {
-        return new BooleanOptionParser().parse(arguments, option);
     }
 
     static class StringOptionParser implements OptionParser {
