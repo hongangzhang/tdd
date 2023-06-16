@@ -11,9 +11,11 @@ public class Args {
 
         try {
             List<String> arguments = Arrays.asList(args);
-            Constructor<?> constructor = optionsClass.getDeclaredConstructors()[0];
-
-            Object[] values = Arrays.stream(constructor.getParameters()).map(it -> parseOption(arguments, it)).toArray();
+            Constructor<?> constructor =
+                    optionsClass.getDeclaredConstructors()[0];
+            Object[] values =
+                    Arrays.stream(constructor.getParameters()).map(it ->
+                            parseOption(arguments, it)).toArray();
 
             return (T) constructor.newInstance(values);
         } catch (Exception e) {
@@ -25,21 +27,60 @@ public class Args {
         Object value = null;
         Option option = parameter.getAnnotation(Option.class);
 
-
         if (parameter.getType().equals(boolean.class)) {
-            value = arguments.contains("-" + option.value());
+            value = parseBoolean(arguments, option);
         }
 
         if (parameter.getType().equals(int.class)) {
-            int index = arguments.indexOf("-" + option.value());
-            value = Integer.parseInt(arguments.get(index + 1));
+            value = parseInt(arguments, option);
         }
 
         if (parameter.getType().equals(String.class)) {
-            int index = arguments.indexOf("-" + option.value());
-            value = arguments.get(index + 1);
+            value = parseString(arguments, option);
         }
         return value;
+    }
+
+    interface OptionParser {
+        Object parse(List<String> arguments, Option option);
+    }
+
+    private static Object parseString(List<String> arguments, Option option) {
+        return new StringOptionParser().parse(arguments, option);
+    }
+
+    private static Object parseInt(List<String> arguments, Option option) {
+        return new IntOptionParser().parse(arguments, option);
+    }
+
+    private static Object parseBoolean(List<String> arguments, Option option) {
+        return new BooleanOptionParser().parse(arguments, option);
+    }
+
+    static class StringOptionParser implements OptionParser {
+
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            int index = arguments.indexOf("-" + option.value());
+            return arguments.get(index + 1);
+        }
+    }
+
+    static class IntOptionParser implements OptionParser {
+
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            int index = arguments.indexOf("-" + option.value());
+            return Integer.parseInt(arguments.get(index + 1));
+        }
+    }
+
+    static class BooleanOptionParser implements  OptionParser {
+
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            return arguments.contains("-" + option.value());
+        }
     }
 
 }
