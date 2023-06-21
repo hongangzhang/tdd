@@ -2,8 +2,11 @@ package geektime.tdd.args;
 
 class StringOptionParser extends IntOptionParser {
 
-    public StringOptionParser() {
+    private StringOptionParser() {
         super(String::valueOf);
     }
 
+    public static OptionParser createStringOptionParser() {
+        return new IntOptionParser(String::valueOf);
+    }
 }

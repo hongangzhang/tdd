@@ -10,7 +10,8 @@ public class Args {
 
     private static final Map<Class<?>, OptionParser> PARSERS = Map.of(boolean.class, new BooleanOptionParser(),
                                                                       int.class, new IntOptionParser(),
-                                                                      String.class, new StringOptionParser());
+                                                                      String.class,
+                                                                      StringOptionParser.createStringOptionParser());
 
     public static <T> T parse(Class<T> optionsClass, String... args) {
 
