@@ -9,9 +9,10 @@ import java.util.Map;
 public class Args {
 
     private static final Map<Class<?>, OptionParser> PARSERS = Map.of(boolean.class, new BooleanOptionParser(),
-                                                                      int.class, new IntOptionParser(),
+                                                                      int.class,
+                                                                      new SingleValueOptionParser(Integer::parseInt),
                                                                       String.class,
-                                                                      StringOptionParser.createStringOptionParser());
+                                                                      new SingleValueOptionParser(String::valueOf));
 
     public static <T> T parse(Class<T> optionsClass, String... args) {
 
