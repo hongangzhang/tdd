@@ -7,7 +7,10 @@ class SingleValueOptionParser<T> implements OptionParser<T> {
 
     Function<String, T> valueParser;
 
-    public SingleValueOptionParser(Function<String, T> valueParser) {
+    T defaultValue;
+
+    public SingleValueOptionParser(T defaultValue, Function<String, T> valueParser) {
+        this.defaultValue = defaultValue;
         this.valueParser = valueParser;
     }
 
@@ -17,6 +20,10 @@ class SingleValueOptionParser<T> implements OptionParser<T> {
 
         if (index == arguments.size()) {
             valueParser.apply("0");
+        }
+
+        if (index == -1) {
+            return defaultValue;
         }
 
         if (index + 1 == arguments.size() ||
