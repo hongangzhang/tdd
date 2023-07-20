@@ -23,12 +23,18 @@ public class Args {
                                     .toArray();
 
             return (T) constructor.newInstance(values);
-        } catch (Exception e) {
+        } catch (IllegalOptonException e) {
+            throw e;
+        }catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private static Object parseOption(List<String> arguments, Parameter parameter) {
+        if (!parameter.isAnnotationPresent(Option.class)) {
+            throw new IllegalOptonException(parameter.getName());
+        }
+
         return PARSERS.get(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
     }
 

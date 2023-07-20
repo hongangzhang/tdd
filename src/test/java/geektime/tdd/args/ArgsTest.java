@@ -20,7 +20,16 @@ public class ArgsTest {
     static record MultiOptions(@Option("l") boolean logging, @Option("p") int port, @Option("d") String directory) {
     }
 
+    @Test
+    public void should_throw_illegal_option_exception_if_annotation_not_present() {
+        IllegalOptonException e = assertThrows(IllegalOptonException.class,
+                           () -> Args.parse(OptionsWithoutAnnotation.class, "-l", "-p", "8080", "-d", "/usr/logs"));
 
+        assertEquals("port", e.getParameter());
+    }
+
+    static record OptionsWithoutAnnotation(@Option("l") boolean logging, int port, @Option("d") String directory) {
+    }
 
     // -g this is a list -d 1 2 -3 5
 
@@ -33,7 +42,7 @@ public class ArgsTest {
     }
 
 
-    static record ListOptions(@Option("g") String[] group, @Option("d") int[] decimals) {
+        static record ListOptions(@Option("g") String[] group, @Option("d") int[] decimals) {
     }
 
 }
