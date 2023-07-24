@@ -1,5 +1,6 @@
 package geektime.tdd.args;
 
+import geektime.tdd.args.exceptions.IllegalOptonException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ public class ArgsTest {
     @Test
     public void should_throw_illegal_option_exception_if_annotation_not_present() {
         IllegalOptonException e = assertThrows(IllegalOptonException.class,
-                           () -> Args.parse(OptionsWithoutAnnotation.class, "-l", "-p", "8080", "-d", "/usr/logs"));
+                                               () -> Args.parse(OptionsWithoutAnnotation.class, "-l", "-p", "8080", "-d", "/usr/logs"));
 
         assertEquals("port", e.getParameter());
     }
