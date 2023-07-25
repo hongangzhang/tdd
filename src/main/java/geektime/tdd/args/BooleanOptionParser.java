@@ -9,7 +9,7 @@ class BooleanOptionParser implements OptionParser<Boolean> {
     private BooleanOptionParser() {
     }
 
-    public static OptionParser<Boolean> createBooleanOptionParser() {
+    public static OptionParser<Boolean> bool() {
         return (arguments, option) -> values(arguments, option, 0)
                 .map(it -> true).orElse(false);
     }
