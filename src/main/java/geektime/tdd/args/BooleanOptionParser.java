@@ -6,7 +6,11 @@ import static geektime.tdd.args.SingleValueOptionParser.values;
 
 class BooleanOptionParser implements OptionParser<Boolean> {
 
-    public BooleanOptionParser() {
+    private BooleanOptionParser() {
+    }
+
+    public static BooleanOptionParser createBooleanOptionParser() {
+        return new BooleanOptionParser();
     }
 
     @Override
