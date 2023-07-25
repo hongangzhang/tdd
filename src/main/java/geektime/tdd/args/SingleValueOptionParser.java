@@ -27,6 +27,11 @@ class SingleValueOptionParser<T> implements OptionParser<T> {
                                                      .orElse(arguments.size()));
     }
 
+    public static OptionParser<Boolean> bool() {
+        return (arguments, option) -> values(arguments, option, 0)
+                .map(it -> true).orElse(false);
+    }
+
     @Override
     public T parse(List<String> arguments, Option option) {
         return values(arguments, option, 1).map(it -> parseValue(option, it.get(0))).orElse(defaultValue);
