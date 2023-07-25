@@ -45,7 +45,7 @@ class SingleValueOptionParser<T> implements OptionParser<T> {
         }
     }
 
-    private List<String> values(List<String> arguments, int index) {
+    static List<String> values(List<String> arguments, int index) {
         return arguments.subList(index + 1, IntStream.range(index + 1, arguments.size())
                                                      .filter(it -> arguments.get(it).startsWith("-"))
                                                      .findFirst()
