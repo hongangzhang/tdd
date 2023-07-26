@@ -32,17 +32,14 @@ class SingleValueOptionParser<T> implements OptionParser<T> {
                 .map(it -> true).orElse(false);
     }
 
-    public static <T> OptionParser<T> createSingleValueOptionParser(T defaultValue,
-                                                                    Function<String, T> valueParser) {
-        return (arguments, option) -> getT(arguments, option, valueParser, defaultValue);
+    public static <T> OptionParser<T> unary(T defaultValue,
+                                            Function<String, T> valueParser) {
+        return (arguments, option) -> values(arguments, option, 1).map(it -> parseValue(option, it.get(0), valueParser)).orElse(
+                defaultValue);
     }
 
     @Override
     public T parse(List<String> arguments, Option option) {
-        return getT(arguments, option, valueParser, defaultValue);
-    }
-
-    private static  <T> T getT(List<String> arguments, Option option, Function<String, T> valueParser, T defaultValue) {
         return values(arguments, option, 1).map(it -> parseValue(option, it.get(0), valueParser)).orElse(defaultValue);
     }
 

@@ -18,7 +18,7 @@ public class SingleValuedOptionParserTest {
     @Test // sad path
     public void should_not_accept_extra_argument_for_single_valued_option() {
         TooManyArgumentsException e = assertThrows(TooManyArgumentsException.class, () -> {
-            SingleValueOptionParser.createSingleValueOptionParser(0, Integer::parseInt).parse(asList("-p", "8080", "8081"), option("p"));
+            SingleValueOptionParser.unary(0, Integer::parseInt).parse(asList("-p", "8080", "8081"), option("p"));
         });
 
         assertEquals("p", e.getOption());
@@ -28,7 +28,7 @@ public class SingleValuedOptionParserTest {
     @ValueSource(strings = {"-p -l", "-p"})
     public void should_accept_insufficient_argument_for_single_valued_option(String arguments) {
         InsufficientArgumentsException e = assertThrows(InsufficientArgumentsException.class, () -> {
-            SingleValueOptionParser.createSingleValueOptionParser(0, Integer::parseInt)
+            SingleValueOptionParser.unary(0, Integer::parseInt)
                                    .parse(List.of(arguments.split(" ")), option("p"));
         });
     }
@@ -38,7 +38,7 @@ public class SingleValuedOptionParserTest {
         Function<String,Object> whatever = (it) -> null;
         Object defaultValue = new Object();
 
-        assertSame(defaultValue, SingleValueOptionParser.createSingleValueOptionParser(defaultValue, whatever)
+        assertSame(defaultValue, SingleValueOptionParser.unary(defaultValue, whatever)
                                                         .parse(List.of(), option("p")));
     }
 
@@ -48,7 +48,7 @@ public class SingleValuedOptionParserTest {
         Function<String, Object> parse = (it) -> parsed;
         Object whatEver = new Object();
 
-        assertSame(parsed, SingleValueOptionParser.createSingleValueOptionParser(whatEver, parse)
+        assertSame(parsed, SingleValueOptionParser.unary(whatEver, parse)
                                                   .parse(List.of("-p", "8080"), option("p")));
     }
 
