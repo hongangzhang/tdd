@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-class SingleValueOptionParser {
+class OptionParsers {
 
     private static List<String> values(List<String> arguments, int index) {
         return arguments.subList(index + 1, IntStream.range(index + 1, arguments.size())
