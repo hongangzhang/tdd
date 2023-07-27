@@ -1,5 +1,6 @@
 package geektime.tdd.args;
 
+import geektime.tdd.args.exceptions.IllegalValueException;
 import geektime.tdd.args.exceptions.InsufficientArgumentsException;
 import geektime.tdd.args.exceptions.TooManyArgumentsException;
 import org.junit.jupiter.api.Nested;
@@ -11,7 +12,6 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.function.Function;
 
-import static geektime.tdd.args.OptionParsersTest.BooleanOptionParser.option;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -82,19 +82,47 @@ public class OptionParsersTest {
         }
 
 
-        public static Option option(String value) {
-            return new Option() {
+    }
 
-                @Override
-                public Class<? extends Annotation> annotationType() {
-                    return Option.class;
-                }
+    @Nested
+    class ListOptionParser {
+        // TODO : -g "this" "is" {"this", "is"}
+        @Test
+        public void should_parse_list_value() {
+            assertArrayEquals(new String[]{"this", "is"}, OptionParsers.list(String[]::new, String::valueOf).parse(asList("-g", "this", "is"), option("g")));
+        }
 
-                @Override
-                public String value() {
-                    return value;
-                }
-            };
+        // TODO : default value []
+        @Test
+        public void should_use_empty_array_as_default_value() {
+            String[] value = OptionParsers.list(String[]::new, String::valueOf).parse(List.of(), option("g"));
+            assertEquals(0, value.length);
+        }
+
+        // TODO : -d a throw exception
+        @Test
+        public void should_throw_exception_if_value_parser_cant_parse_value() {
+            Function<String, String> parser = (it) -> {throw  new RuntimeException();};
+            IllegalValueException e = assertThrows(IllegalValueException.class, () ->
+                    OptionParsers.list(String[]::new, parser).parse(asList("-g", "this", "is"), option("g")));
+            assertEquals("g", e.getOption());
+            assertEquals("this", e.getValue());
         }
     }
+
+    static Option option(String value) {
+        return new Option() {
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return Option.class;
+            }
+
+            @Override
+            public String value() {
+                return value;
+            }
+        };
+    }
+
 }

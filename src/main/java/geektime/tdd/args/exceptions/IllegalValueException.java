@@ -2,23 +2,23 @@ package geektime.tdd.args.exceptions;
 
 public class IllegalValueException extends RuntimeException{
 
-    private final String optionValue;
+    private final String option;
 
-    private final String parameter;
+    private final String value;
 
-    public IllegalValueException(String optionValue, String parameter) {
-        super(parameter);
-        this.optionValue = optionValue;
-        this.parameter = parameter;
+    public IllegalValueException(String option, String value) {
+        super(value);
+        this.option = option;
+        this.value = value;
     }
 
 
-    public String getOptionValue() {
-        return optionValue;
+    public String getOption() {
+        return option;
     }
 
-    public String getParameter() {
-        return parameter;
+    public String getValue() {
+        return value;
     }
 
 }
