@@ -1,6 +1,7 @@
 package geektime.tdd.args;
 
 import geektime.tdd.args.exceptions.IllegalOptonException;
+import geektime.tdd.args.exceptions.UnsupportedOptionTypeException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
@@ -35,6 +36,11 @@ public class Args {
     private static Object parseOption(List<String> arguments, Parameter parameter) {
         if (!parameter.isAnnotationPresent(Option.class)) {
             throw new IllegalOptonException(parameter.getName());
+        }
+
+        Option option = parameter.getAnnotation(Option.class);
+        if (!PARSERS.containsKey(parameter.getType())) {
+            throw new UnsupportedOptionTypeException(option.value(), parameter.getType());
         }
 
         return PARSERS.get(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
