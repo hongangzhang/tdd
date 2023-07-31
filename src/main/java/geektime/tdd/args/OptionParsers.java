@@ -26,11 +26,12 @@ class OptionParsers {
 
     public static <T> OptionParser<T> unary(T defaultValue,
                                             Function<String, T> valueParser) {
-        return (arguments, option) -> values(arguments, option, 1).map(it -> parseValue(option, it.get(0), valueParser)).orElse(
-                defaultValue);
+        return (arguments, option) -> values(arguments, option, 1).map(it -> parseValue(option, it.get(0), valueParser))
+                                                                  .orElse(
+                                                                          defaultValue);
     }
 
-    public static <T>  OptionParser<T[]> list(IntFunction<T[]> generator, Function<String, T> valueParser) {
+    public static <T> OptionParser<T[]> list(IntFunction<T[]> generator, Function<String, T> valueParser) {
         return (arguments, option) -> values(arguments, option)
                 .map(it -> it.stream().map(value -> parseValue(option, value, valueParser)).toArray(generator))
                 .orElse(generator.apply(0));
@@ -42,15 +43,7 @@ class OptionParsers {
     }
 
     private static Optional<List<String>> values(List<String> arguments, Option option, int expectedSize) {
-        int index = arguments.indexOf("-" + option.value());
-
-        if (index == -1) {
-            return Optional.empty();
-        }
-
-        List<String> values = values(arguments, index);
-
-        return Optional.of(values)
+        return values(arguments, option)
                 .map(it -> {
                     checkSize(option, expectedSize, it);
                     return it;
