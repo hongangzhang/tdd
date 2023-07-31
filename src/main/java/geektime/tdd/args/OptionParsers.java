@@ -50,6 +50,14 @@ class OptionParsers {
 
         List<String> values = values(arguments, index);
 
+        return Optional.of(values)
+                .map(it -> {
+                    checkSize(option, expectedSize, it);
+                    return it;
+                });
+    }
+
+    private static void checkSize(Option option, int expectedSize, List<String> values) {
         if (values.size() < expectedSize) {
             throw new InsufficientArgumentsException(option.value());
         }
@@ -57,8 +65,6 @@ class OptionParsers {
         if (values.size() > expectedSize) {
             throw new TooManyArgumentsException(option.value());
         }
-
-        return Optional.of(values);
     }
 
     private static <T> T parseValue(Option option, String value, Function<String, T> valueParser) {
