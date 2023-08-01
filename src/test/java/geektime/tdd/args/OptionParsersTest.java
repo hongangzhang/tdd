@@ -72,15 +72,14 @@ public class OptionParsersTest {
 
 
         @Test // Default value
-        public void should_set_value_to_true_if_option_present() {
-            assertFalse(OptionParsers.bool().parse(List.of(), option("l")));
-        }
-
-        @Test // Happy Path
-        public void should_set_default_value_if_option_not_present() {
+        public void should_set_default_value_to_false_if_option_not_present() {
             assertTrue(OptionParsers.bool().parse(List.of("-l"), option("l")));
         }
 
+        @Test // Happy Path
+        public void should_set_value_to_true_if_option_present() {
+            assertFalse(OptionParsers.bool().parse(List.of(), option("l")));
+        }
 
     }
 
